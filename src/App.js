@@ -1,7 +1,6 @@
-
 import React, { useState } from "react";
-import NoteInput from "./components/NoteInput";
-import NoteList from "./components/NoteList";
+import { NoteInput } from "./components/NoteInput";
+import { NoteList } from "./components/NoteList";
 import { socket } from "./Socket";
 
 function App() {
@@ -9,31 +8,43 @@ function App() {
   const [joined, setJoined] = useState(false);
 
   const joinRoom = () => {
-    if (roomId.trim() === "") return;
+    if (!roomId) return;
     socket.emit("join_room", roomId);
     setJoined(true);
   };
 
-  return (
-    <div style={{ padding: 20, fontFamily: "system-ui, Arial" }}>
-      <h1> Clipboard Sharing</h1>
+  const clearNotes = () => {
+    if (!roomId) return;
+    socket.emit("clear_notes", roomId);
+  };
 
+  return (
+    <div style={{ padding: "20px", fontFamily: "Arial" }}>
       {!joined ? (
         <div>
+          <h2>Enter Room ID</h2>
           <input
             type="text"
             value={roomId}
             onChange={(e) => setRoomId(e.target.value)}
-            placeholder="Enter 6-digit Room ID"
-            style={{ padding: 8, fontSize: 16 }}
+            style={{ padding: "5px", fontSize: "16px" }}
           />
-          <button onClick={joinRoom} style={{ marginLeft: 8, padding: 8 }}>
+          <button
+            onClick={joinRoom}
+            style={{ marginLeft: "10px", padding: "5px 10px", fontSize: "16px" }}
+          >
             Connect
           </button>
         </div>
       ) : (
         <div>
-          <p>Connected to room: {roomId}</p>
+          <h2>Room: {roomId}</h2>
+          <button
+            onClick={clearNotes}
+            style={{ marginBottom: "10px", padding: "5px 10px", color: "white", background: "red", border: "none", borderRadius: "4px" }}
+          >
+            Clear All Notes
+          </button>
           <NoteInput roomId={roomId} />
           <NoteList roomId={roomId} />
         </div>

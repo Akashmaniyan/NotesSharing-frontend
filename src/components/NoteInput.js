@@ -1,30 +1,30 @@
 import React, { useState } from "react";
 import { socket } from "../Socket";
 
-export default function NoteInput({ roomId }) {
+export const NoteInput = ({ roomId }) => {
   const [text, setText] = useState("");
 
-  const send = () => {
+  const sendNote = () => {
     if (!text) return;
-    const note = { id: Date.now(), text, ts: new Date().toISOString() };
+    const note = { text, ts: new Date() };
     socket.emit("send_note", { roomId, note });
     setText("");
   };
 
   return (
-    <div style={{ marginTop: 16 }}>
-      <textarea
-        rows={3}
+    <div style={{ marginBottom: "15px" }}>
+      <input
+        type="text"
         value={text}
         onChange={(e) => setText(e.target.value)}
-        placeholder="Type or paste your note..."
-        style={{ width: "100%", padding: 8 }}
+        style={{ padding: "5px", fontSize: "16px", width: "300px" }}
       />
-      <div style={{ textAlign: "right", marginTop: 8 }}>
-        <button onClick={send} style={{ padding: "6px 12px" }}>
-          Send
-        </button>
-      </div>
+      <button
+        onClick={sendNote}
+        style={{ marginLeft: "10px", padding: "5px 10px", fontSize: "16px" }}
+      >
+        Send
+      </button>
     </div>
   );
-}
+};
