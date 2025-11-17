@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { socket } from "../socket";
+import { socket } from "../Socket";
 
 export default function NoteList() {
   const [notes, setNotes] = useState([]);
